@@ -63,12 +63,6 @@ function showErrors(errors, form) {
         let languagesError = form.querySelector("#languages_error");
         languagesError.innerHTML = errors["languages"];
     }
-
-    // for (let key in errors) {
-    //     let spanElement = form.querySelector("#" + key + "_error");
-    //     let errorMessage = errors[key];
-    //     spanElement.innerHTML = errorMessage;
-    // }
 }
 
 function clearErrors(form) {
@@ -82,8 +76,6 @@ function clearErrors(form) {
     experienceError.innerHTML = "";
     languagesError.innerHTML = "";
 }
-
-
 
 function onClick(e) {
     e.preventDefault();
