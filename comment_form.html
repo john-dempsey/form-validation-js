@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Comment form</title>
+</head>
+<body>
+    <form id="comment_form">
+        <p>
+            Name: 
+            <input type="text" id="name" name="name" value="">
+            <span id="name_error" class="error"><span>
+        </p>
+        <p>
+            Category:
+            <select id="category" name="category">
+                <option value="">Please choose a category...</option>"
+                <option value="Sport">Sport</option>
+                <option value="Music">Music</option>
+                <option value="Movies" >Movies</option>
+            </select>
+            <span id="category_error" class="error"><span>
+        </p>
+        <p>
+            Experience:
+            <input type="radio" name="experience" value="Novice">Novice
+            <input type="radio" name="experience" value="Competent">Competent
+            <input type="radio" name="experience" value="Expert">Expert
+            <span id="experience_error" class="error"><span>
+        </p>
+        <p>
+            Languages:
+            <input type="checkbox" name="languages[]" value="English">English
+            <input type="checkbox" name="languages[]" value="Irish">Irish
+            <input type="checkbox" name="languages[]" value="Spanish">Spanish
+            <span id="languages_error" class="error"><span>
+        </p>
+        <button id="submit_btn" type="submit">Submit</button>
+    </form>
+    <script src="form.js"></script>
+</body>
+</html>
