@@ -1,20 +1,23 @@
 class Validator {
-    constructor() {}
+    constructor(_form) {
+        this.form = _form;
+        this.errors = null;
+    }
 
-    validate(form) {
-        let errors = {};
+    validate() {
+        this.errors = {};
 
-        let nameField = form.querySelector("#name");
-        let categoryInput = form.querySelector("#category");
-        let experienceBtns = form.querySelectorAll("[name=experience]");
-        let languageBtns = form.querySelectorAll("[name='languages[]']");
+        let nameField = this.form.querySelector("#name");
+        let categoryInput = this.form.querySelector("#category");
+        let experienceBtns = this.form.querySelectorAll("[name=experience]");
+        let languageBtns = this.form.querySelectorAll("[name='languages[]']");
         
         if (nameField.value === "") {
-            errors["name"] = "Name is required";
+            this.errors["name"] = "Name is required";
         }
     
         if (categoryInput.value === "") {
-            errors["category"] = "Category is required";
+            this.errors["category"] = "Category is required";
         }
     
         let expSelected = false;
@@ -26,7 +29,7 @@ class Validator {
             }
         }
         if (!expSelected) {
-            errors["experience"] = "Experience is required";
+            this.errors["experience"] = "Experience is required";
         }
     
         let minLang = 1;
@@ -39,61 +42,61 @@ class Validator {
             }
         }
         if (countLang < minLang || countLang > maxLang) {
-            errors["languages"] = "Choose one or two languages";
+            this.errors["languages"] = "Choose one or two languages";
         }
 
-        return errors;
-    }
-}
+        let numErrors = Object.keys(this.errors).length;
 
-function showErrors(errors, form) {
-    if ("name" in errors) {
-        let nameError = form.querySelector("#name_error");
-        nameError.innerHTML = errors["name"];
+        return numErrors === 0;
     }
-    if ("category" in errors) {
-        let categoryError = form.querySelector("#category_error");
-        categoryError.innerHTML = errors["category"];
-    }
-    if ("experience" in errors) {
-        let experienceError = form.querySelector("#experience_error");
-        experienceError.innerHTML = errors["experience"];
-    }
-    if ("languages" in errors) {
-        let languagesError = form.querySelector("#languages_error");
-        languagesError.innerHTML = errors["languages"];
-    }
-}
 
-function clearErrors(form) {
-    let nameError = form.querySelector("#name_error");
-    let categoryError = form.querySelector("#category_error");
-    let experienceError = form.querySelector("#experience_error");
-    let languagesError = form.querySelector("#languages_error");
-    
-    nameError.innerHTML = "";
-    categoryError.innerHTML = "";
-    experienceError.innerHTML = "";
-    languagesError.innerHTML = "";
+    showErrors() {
+        if ("name" in this.errors) {
+            let nameError = this.form.querySelector("#name_error");
+            nameError.innerHTML = this.errors["name"];
+        }
+        if ("category" in this.errors) {
+            let categoryError = this.form.querySelector("#category_error");
+            categoryError.innerHTML = this.errors["category"];
+        }
+        if ("experience" in this.errors) {
+            let experienceError = this.form.querySelector("#experience_error");
+            experienceError.innerHTML = this.errors["experience"];
+        }
+        if ("languages" in this.errors) {
+            let languagesError = this.form.querySelector("#languages_error");
+            languagesError.innerHTML = this.errors["languages"];
+        }
+    }
+
+    clearErrors() {
+        let nameError = this.form.querySelector("#name_error");
+        let categoryError = this.form.querySelector("#category_error");
+        let experienceError = this.form.querySelector("#experience_error");
+        let languagesError = this.form.querySelector("#languages_error");
+        
+        nameError.innerHTML = "";
+        categoryError.innerHTML = "";
+        experienceError.innerHTML = "";
+        languagesError.innerHTML = "";
+    }
 }
 
 function onClick(e) {
     e.preventDefault();
 
     let commentForm = document.getElementById("comment_form");
-    clearErrors(commentForm);
-    let validator = new Validator();
-    let errors = validator.validate(commentForm);
+    let validator = new Validator(commentForm);
+    validator.clearErrors();
+    let formValid = validator.validate();
 
-    // if there was no errors then submit the form
-    if (Object.keys(errors).length === 0) {
+   if (formValid) {
         commentForm.submit();
     }
     else {
-        showErrors(errors, commentForm);
+        validator.showErrors();
     }
 }
-
 
 let submitBtn = document.getElementById("submit_btn");   
 submitBtn.addEventListener("click", onClick);
