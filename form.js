@@ -2,10 +2,15 @@ class Validator {
     constructor(_form) {
         this.form = _form;
         this.errors = null;
+
+        this.nameError = this.form.querySelector("#name_error");
+        this.categoryError = this.form.querySelector("#category_error");
+        this.experienceError = this.form.querySelector("#experience_error");
+        this.languagesError = this.form.querySelector("#languages_error");
     }
 
     validate() {
-        this.errors = {};
+        this.errors = [];
 
         let nameField = this.form.querySelector("#name");
         let categoryInput = this.form.querySelector("#category");
@@ -13,11 +18,19 @@ class Validator {
         let languageBtns = this.form.querySelectorAll("[name='languages[]']");
         
         if (nameField.value === "") {
-            this.errors["name"] = "Name is required";
+            let error = {
+                field: this.nameError,
+                message: "Name is required"
+            };
+            this.errors.push(error);
         }
     
         if (categoryInput.value === "") {
-            this.errors["category"] = "Category is required";
+            let error = {
+                field: this.categoryError,
+                message: "Category is required"
+            };
+            this.errors.push(error);
         }
     
         let expSelected = false;
@@ -29,7 +42,11 @@ class Validator {
             }
         }
         if (!expSelected) {
-            this.errors["experience"] = "Experience is required";
+            let error = {
+                field: this.experienceError,
+                message: "Experience is required"
+            };
+            this.errors.push(error);
         }
     
         let minLang = 1;
@@ -42,43 +59,28 @@ class Validator {
             }
         }
         if (countLang < minLang || countLang > maxLang) {
-            this.errors["languages"] = "Choose one or two languages";
+            let error = {
+                field: this.languagesError,
+                message: "Choose one or two languages"
+            };
+            this.errors.push(error);
         }
 
-        let numErrors = Object.keys(this.errors).length;
-
-        return numErrors === 0;
+        return this.errors.length === 0;
     }
 
     showErrors() {
-        if ("name" in this.errors) {
-            let nameError = this.form.querySelector("#name_error");
-            nameError.innerHTML = this.errors["name"];
-        }
-        if ("category" in this.errors) {
-            let categoryError = this.form.querySelector("#category_error");
-            categoryError.innerHTML = this.errors["category"];
-        }
-        if ("experience" in this.errors) {
-            let experienceError = this.form.querySelector("#experience_error");
-            experienceError.innerHTML = this.errors["experience"];
-        }
-        if ("languages" in this.errors) {
-            let languagesError = this.form.querySelector("#languages_error");
-            languagesError.innerHTML = this.errors["languages"];
+        for (let i = 0; i < this.errors.length; i++) {
+            let error = this.errors[i];
+            error.field.innerHTML = error.message;
         }
     }
 
     clearErrors() {
-        let nameError = this.form.querySelector("#name_error");
-        let categoryError = this.form.querySelector("#category_error");
-        let experienceError = this.form.querySelector("#experience_error");
-        let languagesError = this.form.querySelector("#languages_error");
-        
-        nameError.innerHTML = "";
-        categoryError.innerHTML = "";
-        experienceError.innerHTML = "";
-        languagesError.innerHTML = "";
+        this.nameError.innerHTML = "";
+        this.categoryError.innerHTML = "";
+        this.experienceError.innerHTML = "";
+        this.languagesError.innerHTML = "";
     }
 }
 
