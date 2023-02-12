@@ -1,5 +1,57 @@
 class Validator {
+    constructor() {}
+
+    notEmpty(field) {
+        return field.value !== "";
+    }
+
+    minLength(field, minLen) {
+        return field.value.length >= minLen;
+    }
+
+    maxLength(field, minLen) {
+        return field.value.length <= minLen;
+    }
+
+    numeric(field) {
+        return !isNaN(field.value) && !isNaN(parseFloat(field.value));
+    }
+
+    min(field, minValue) {
+        return this.numeric(field) && parseFloat(field.value) >= minValue;
+    }
+
+    max(field, maxValue) {
+        return this.numeric(field) && parseFloat(field.value) <= maxValue;
+    }
+
+    minChecked(buttons, minNum) {
+        let count = 0;
+        for (let i = 0; i < buttons.length; i++) {
+            let btn = buttons[i];
+            if (btn.checked) {
+                count++;
+            }
+        }
+        return count >= minNum;
+    }
+
+    maxChecked(buttons, maxNum) {
+        let count = 0;
+        for (let i = 0; i < buttons.length; i++) {
+            let btn = buttons[i];
+            if (btn.checked) {
+                count++;
+            }
+        }
+        return count <= maxNum;
+    }
+}
+
+class FormValidator extends Validator {
     constructor(_form) {
+        super();
+
         this.form = _form;
         this.errors = null;
 
@@ -23,7 +75,7 @@ class Validator {
     validateName() {
         let nameField = this.form.querySelector("#name");
         
-        if (nameField.value === "") {
+        if (!this.notEmpty(nameField)) {
             let error = {
                 field: this.nameError,
                 message: "Name is required"
@@ -35,7 +87,7 @@ class Validator {
     validateCategory() {
         let categoryInput = this.form.querySelector("#category");
 
-        if (categoryInput.value === "") {
+        if (!this.notEmpty(categoryInput)) {
             let error = {
                 field: this.categoryError,
                 message: "Category is required"
@@ -47,15 +99,7 @@ class Validator {
     validateExperience() {
         let experienceBtns = this.form.querySelectorAll("[name=experience]");
     
-        let expSelected = false;
-        for (let i = 0; i < experienceBtns.length; i++) {
-            let btn = experienceBtns[i];
-            if (btn.checked) {
-                expSelected = true;
-                break;
-            }
-        }
-        if (!expSelected) {
+        if (!this.minChecked(experienceBtns, 1)) {
             let error = {
                 field: this.experienceError,
                 message: "Experience is required"
@@ -69,14 +113,7 @@ class Validator {
 
         let minLang = 1;
         let maxLang = 2;
-        let countLang = 0;
-        for (let i = 0; i < languageBtns.length; i++) {
-            let btn = languageBtns[i];
-            if (btn.checked) {
-                countLang++;
-            }
-        }
-        if (countLang < minLang || countLang > maxLang) {
+        if (!this.minChecked(languageBtns, minLang) || !this.maxChecked(languageBtns, maxLang)) {
             let error = {
                 field: this.languagesError,
                 message: "Choose one or two languages"
@@ -104,7 +141,7 @@ function onClick(e) {
     e.preventDefault();
 
     let commentForm = document.getElementById("comment_form");
-    let validator = new Validator(commentForm);
+    let validator = new FormValidator(commentForm);
     validator.clearErrors();
     let formValid = validator.validate();
 
