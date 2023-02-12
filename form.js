@@ -48,9 +48,9 @@ class Validator {
     }
 }
 
-class FormValidator extends Validator {
+class FormValidator {
     constructor(_form) {
-        super();
+        this.validator = new Validator();
 
         this.form = _form;
         this.errors = null;
@@ -75,7 +75,7 @@ class FormValidator extends Validator {
     validateName() {
         let nameField = this.form.querySelector("#name");
         
-        if (!this.notEmpty(nameField)) {
+        if (!this.validator.notEmpty(nameField)) {
             let error = {
                 field: this.nameError,
                 message: "Name is required"
@@ -87,7 +87,7 @@ class FormValidator extends Validator {
     validateCategory() {
         let categoryInput = this.form.querySelector("#category");
 
-        if (!this.notEmpty(categoryInput)) {
+        if (!this.validator.notEmpty(categoryInput)) {
             let error = {
                 field: this.categoryError,
                 message: "Category is required"
@@ -99,7 +99,7 @@ class FormValidator extends Validator {
     validateExperience() {
         let experienceBtns = this.form.querySelectorAll("[name=experience]");
     
-        if (!this.minChecked(experienceBtns, 1)) {
+        if (!this.validator.minChecked(experienceBtns, 1)) {
             let error = {
                 field: this.experienceError,
                 message: "Experience is required"
@@ -113,7 +113,7 @@ class FormValidator extends Validator {
 
         let minLang = 1;
         let maxLang = 2;
-        if (!this.minChecked(languageBtns, minLang) || !this.maxChecked(languageBtns, maxLang)) {
+        if (!this.validator.minChecked(languageBtns, minLang) || !this.validator.maxChecked(languageBtns, maxLang)) {
             let error = {
                 field: this.languagesError,
                 message: "Choose one or two languages"
